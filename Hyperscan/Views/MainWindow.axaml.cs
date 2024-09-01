@@ -74,14 +74,17 @@ public partial class MainWindow : Window
                         MatchResult.Inlines!.Add(new Run { Text = Encoding.UTF8.GetString(utf8Text.AsSpan(offset, (int)from - offset)) });
                     }
 
-                    MatchResult.Inlines!.Add(new Run
+                    if (offset <= (uint)from)
                     {
-                        Text = Encoding.UTF8.GetString(utf8Text.AsSpan((int)from, (int)(to - from))),
-                        Background = SelectColor
-                    });
+                        MatchResult.Inlines!.Add(new Run
+                        {
+                            Text = Encoding.UTF8.GetString(utf8Text.AsSpan((int)from, (int)(to - from))),
+                            Background = SelectColor
+                        });
 
-                    offset = (int)to;
-                    matchCount++;
+                        offset = (int)to;
+                        matchCount++;
+                    }
 
                     return 0;
                 });
@@ -114,13 +117,17 @@ public partial class MainWindow : Window
                         MatchHexResult.Inlines!.Add(new Run { Text = ToHex(utf8Text.AsSpan(offset, (int)from - offset), true) });
                     }
 
-                    MatchHexResult.Inlines!.Add(new Run
+                    if (offset <= (uint)from)
                     {
-                        Text = ToHex(utf8Text.AsSpan((int)from, (int)(to - from)), true),
-                        Background = SelectColor
-                    });
+                        MatchHexResult.Inlines!.Add(new Run
+                        {
+                            Text = ToHex(utf8Text.AsSpan((int)from, (int)(to - from)), true),
+                            Background = SelectColor
+                        });
 
-                    offset = (int)to;
+                        offset = (int)to;
+                    }
+                   
                     matchCount++;
 
                     return 0;
