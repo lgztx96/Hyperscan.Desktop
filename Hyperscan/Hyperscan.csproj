@@ -1,0 +1,28 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <LangVersion>preview</LangVersion>
+	<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
+	<MvvmToolkitEnableINotifyPropertyChangingSupport>false</MvvmToolkitEnableINotifyPropertyChangingSupport>
+    <Platforms>AnyCPU;x86;x64</Platforms>
+    <NoWarn>CA1806;CA1401;IDE1006</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <AvaloniaResource Include="Assets\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Avalonia" Version="11.0.13" />
+    <!--<PackageReference Include="Avalonia.Themes.Fluent" Version="11.2.0-beta1" />-->
+    <!--<PackageReference Include="Avalonia.Fonts.Inter" Version="11.2.0-beta1" />-->
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.3.0" />
+
+    <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
+    <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.0.13" />
+    <PackageReference Include="FluentAvaloniaUI" Version="2.0.0" />
+  </ItemGroup>
+	
+</Project>

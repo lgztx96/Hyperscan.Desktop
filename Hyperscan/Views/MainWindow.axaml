@@ -1,0 +1,181 @@
+<Window
+    x:Class="Hyperscan.Views.MainWindow"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:avaloniaHex="clr-namespace:AvaloniaHex;assembly=AvaloniaHex"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:rendering="clr-namespace:AvaloniaHex.Rendering;assembly=AvaloniaHex"
+    xmlns:views="clr-namespace:Hyperscan.Views"
+    xmlns:vm="using:Hyperscan.ViewModels"
+    Title="hyperscan"
+    Width="800"
+    Height="450"
+    d:DesignHeight="350"
+    d:DesignWidth="800"
+    x:CompileBindings="True"
+    x:DataType="vm:MainViewModel"
+    FontFamily="微软雅黑"
+    FontWeight="Regular"
+    Icon="/Assets/avalonia-logo.ico"
+    RequestedThemeVariant="Dark"
+    TransparencyLevelHint="Mica"
+    WindowStartupLocation="CenterScreen"
+    mc:Ignorable="d">
+    <Window.Styles>
+        <Style Selector="CheckBox.noContent /template/ ContentPresenter#ContentPresenter">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+    </Window.Styles>
+    <Window.Resources>
+        <x:Double x:Key="TabItemMinHeight">30</x:Double>
+        <x:Double x:Key="TabItemHeaderFontSize">17</x:Double>
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" MinHeight="40" />
+            <RowDefinition />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+
+        <TabControl
+            x:Name="MainTab"
+            Grid.Row="1"
+            Grid.ColumnSpan="3"
+            Padding="10,0,10,0">
+            <TabControl.Items>
+                <TabItem Header="text">
+                    <Grid RowDefinitions="*,4,*">
+                        <TextBox
+                            x:Name="MatchText"
+                            Grid.Row="0"
+                            Grid.ColumnSpan="3"
+                            AcceptsReturn="True"
+                            TextWrapping="Wrap"
+                            Watermark="insert text string here" />
+                        <GridSplitter Grid.Row="1" ResizeDirection="Rows" />
+                        <ScrollViewer
+                            Grid.Row="2"
+                            Grid.ColumnSpan="3"
+                            Margin="0,5,0,0"
+                            HorizontalScrollBarVisibility="Disabled"
+                            VerticalScrollBarVisibility="Auto">
+                            <TextBlock x:Name="MatchResult" TextWrapping="Wrap" />
+                        </ScrollViewer>
+                    </Grid>
+                </TabItem>
+                <TabItem Header="hex">
+                    <Grid RowDefinitions="*,4,*">
+                        <TextBox
+                            x:Name="MatchHexText"
+                            Grid.Row="0"
+                            Grid.ColumnSpan="3"
+                            AcceptsReturn="True"
+                            TextWrapping="Wrap"
+                            Watermark="insert hex string here. such as 41 33 20 43 41 50" />
+                        <GridSplitter Grid.Row="1" ResizeDirection="Rows" />
+                        <ScrollViewer
+                            Grid.Row="2"
+                            Grid.ColumnSpan="3"
+                            Margin="0,5,0,0"
+                            HorizontalScrollBarVisibility="Disabled"
+                            VerticalScrollBarVisibility="Auto">
+                            <TextBlock x:Name="MatchHexResult" TextWrapping="Wrap" />
+                        </ScrollViewer>
+                    </Grid>
+                </TabItem>
+                <TabItem Header="file">
+                    <Grid ColumnDefinitions="*,auto" RowDefinitions="auto,*">
+                        <Button
+                            Grid.Row="0"
+                            Grid.Column="1"
+                            Margin="10,5,0,5"
+                            Click="OpenOnClick"
+                            Content="OPEN" />
+                        <TextBox
+                            VerticalAlignment="Center"
+                            IsReadOnly="True"
+                            Text="{Binding FilePath, Mode=OneWay}" />
+                        <DataGrid
+                            Grid.Row="1"
+                            Grid.ColumnSpan="2"
+                            CanUserReorderColumns="True"
+                            CanUserResizeColumns="True"
+                            CanUserSortColumns="False"
+                            GridLinesVisibility="All"
+                            ItemsSource="{Binding Matches}">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Binding="{Binding Offset}" Header="offset" />
+                                <DataGridTextColumn Binding="{Binding Content}" Header="content" />
+                                <DataGridTextColumn Binding="{Binding Hex}" Header="hex" />
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </Grid>
+                </TabItem>
+            </TabControl.Items>
+        </TabControl>
+        <TextBox
+            x:Name="PatternTextBox"
+            Margin="10,10,5,5"
+            TextWrapping="Wrap"
+            Watermark="insert regular expression here" />
+        <Button
+            Grid.Row="0"
+            Grid.Column="2"
+            Margin="5,10,10,5"
+            Click="MatchOnClick"
+            Content="OK" />
+        <SplitButton
+            Grid.Row="0"
+            Grid.Column="1"
+            Margin="5,10,5,5"
+            Content="Flags">
+            <SplitButton.Flyout>
+                <Flyout Placement="Bottom">
+                    <ScrollViewer Width="200">
+                        <ItemsControl x:Name="Flags" ItemsSource="{Binding Flags, Mode=OneTime}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid Margin="0,0,0,5" ColumnDefinitions="*,auto">
+                                        <TextBlock FontSize="13" TextWrapping="Wrap">
+                                            <Run FontWeight="Bold" Text="{Binding Title, Mode=OneTime}" />
+                                            <LineBreak />
+                                            <Run Text="{Binding Description, Mode=OneTime}" />
+                                        </TextBlock>
+                                        <CheckBox
+                                            Grid.Column="1"
+                                            Margin="5,0,0,0"
+                                            Padding="0"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"
+                                            IsChecked="{Binding IsSelected, Mode=TwoWay}" />
+                                    </Grid>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
+                </Flyout>
+            </SplitButton.Flyout>
+        </SplitButton>
+        <TextBlock
+            x:Name="Error"
+            Grid.Row="2"
+            Grid.ColumnSpan="3"
+            Margin="5"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Bottom"
+            TextWrapping="Wrap" />
+        <TextBlock
+            x:Name="MatchInfo"
+            Grid.Row="2"
+            Grid.ColumnSpan="3"
+            Margin="5"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Bottom" />
+    </Grid>
+</Window>
