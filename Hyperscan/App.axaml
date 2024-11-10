@@ -2,12 +2,14 @@
     x:Class="Hyperscan.App"
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:sty="using:FluentAvalonia.Styling"
+    xmlns:actipro="http://schemas.actiprosoftware.com/avaloniaui"
     RequestedThemeVariant="Default">
     <!--  "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options.  -->
 
     <Application.Styles>
-		<!--<FluentTheme />-->
-        <sty:FluentAvaloniaTheme PreferUserAccentColor="True" />
+		<actipro:ModernTheme>
+			<!-- When using Native DataGrid -->
+			<StyleInclude Source="avares://ActiproSoftware.Avalonia.Themes.Native.DataGrid/Themes/Common.axaml"/>
+		</actipro:ModernTheme>
     </Application.Styles>
 </Application>

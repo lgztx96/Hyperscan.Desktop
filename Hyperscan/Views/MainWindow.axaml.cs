@@ -1,5 +1,7 @@
-﻿using Avalonia.Controls;
+﻿using Avalonia;
+using Avalonia.Controls;
 using Avalonia.Controls.Documents;
+using Avalonia.Controls.Notifications;
 using Avalonia.Media;
 using Avalonia.Platform.Storage;
 using Hyperscan.Core;
@@ -21,9 +23,15 @@ public partial class MainWindow : Window
     private int offset = 0;
     private int matchCount = 0;
 
-    private static readonly SolidColorBrush SelectColor = new(Color.Parse("#16c60c"));
+    private static readonly SolidColorBrush SelectColor = new(Color.Parse("#76d176"));
+
+    private readonly WindowNotificationManager notificationManager;
 
     private MainViewModel ViewModel { get; set; }
+
+
+    [GeneratedRegex(@"\s+")]
+    public static partial Regex WhitespaceRegex { get; }
 
 #pragma warning disable CS8618
     public MainWindow() { }
@@ -36,6 +44,7 @@ public partial class MainWindow : Window
         ViewModel = viewModel;
         MatchResult.Inlines = [];
         MatchHexResult.Inlines = [];
+        notificationManager = new WindowNotificationManager(TopLevel.GetTopLevel(this));
     }
 
     void Initialize()
@@ -43,7 +52,6 @@ public partial class MainWindow : Window
         MatchResult.Inlines?.Clear();
         MatchHexResult.Inlines?.Clear();
 
-        Error.Text = null;
         MatchInfo.Text = null;
 
         if (MainTab.SelectedIndex != 0)
@@ -106,7 +114,7 @@ public partial class MainWindow : Window
                 }
                 catch (Exception ex)
                 {
-                    Error.Text = ex.Message;
+                    notificationManager.Show(new Notification("error", ex.Message, NotificationType.Error));
                     return;
                 }
 
@@ -182,7 +190,7 @@ public partial class MainWindow : Window
                 }
                 catch (Exception ex)
                 {
-                    Error.Text = ex.Message;
+                    notificationManager.Show(new Notification("error", ex.Message, NotificationType.Error));
                 }
             }
         }
@@ -222,7 +230,7 @@ public partial class MainWindow : Window
         }
         catch (ArgumentException ex)
         {
-            Error.Text = ex.Message;
+            notificationManager.Show(new Notification("error", ex.Message, NotificationType.Error));
             return;
         }
 
@@ -299,7 +307,7 @@ public partial class MainWindow : Window
         }
         catch (ArgumentException ex)
         {
-            Error.Text = ex.Message;
+            notificationManager.Show(new Notification("error", ex.Message, NotificationType.Error));
             return;
         }
 
@@ -325,7 +333,4 @@ public partial class MainWindow : Window
             ViewModel.FilePath = path;
         }
     }
-
-    [GeneratedRegex(@"\s+")]
-    public static partial Regex WhitespaceRegex { get; }
 }
