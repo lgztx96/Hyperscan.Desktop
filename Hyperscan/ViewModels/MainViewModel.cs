@@ -11,7 +11,7 @@ public sealed partial class MainViewModel : ObservableObject
     [ObservableProperty]
     private ObservableCollection<MatchContent>? matches;
 
-    public List<HsFlag> Flags { get; set; }
+    public List<HsFlag> Flags { get; }
 
     //public string? Pattern { get; set; }
 

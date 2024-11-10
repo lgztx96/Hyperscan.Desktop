@@ -18,7 +18,6 @@
     FontFamily="微软雅黑"
     FontWeight="Regular"
     Icon="/Assets/avalonia-logo.ico"
-    RequestedThemeVariant="Dark"
     TransparencyLevelHint="Mica"
     WindowStartupLocation="CenterScreen"
     mc:Ignorable="d">
@@ -107,6 +106,7 @@
                             CanUserReorderColumns="True"
                             CanUserResizeColumns="True"
                             CanUserSortColumns="False"
+							SelectionMode="Extended"
                             GridLinesVisibility="All"
                             ItemsSource="{Binding Matches}">
                             <DataGrid.Columns>
