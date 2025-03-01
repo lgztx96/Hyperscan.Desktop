@@ -1,5 +1,4 @@
-﻿using Avalonia;
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Controls.Documents;
 using Avalonia.Controls.Notifications;
 using Avalonia.Media;
@@ -28,7 +27,6 @@ public partial class MainWindow : Window
     private readonly WindowNotificationManager notificationManager;
 
     private MainViewModel ViewModel { get; set; }
-
 
     [GeneratedRegex(@"\s+")]
     public static partial Regex WhitespaceRegex { get; }
@@ -112,7 +110,7 @@ public partial class MainWindow : Window
                     string hex = WhitespaceRegex.Replace(text, "");
                     utf8Text = Convert.FromHexString(hex);
                 }
-                catch (Exception ex)
+                catch (FormatException ex)
                 {
                     notificationManager.Show(new Notification("error", ex.Message, NotificationType.Error));
                     return;
@@ -178,7 +176,7 @@ public partial class MainWindow : Window
                     });
 
                     view.SafeMemoryMappedViewHandle.ReleasePointer();
-                    ViewModel.Matches = new(matches);
+                    ViewModel.Matches = [.. matches];
 
                 }
                 catch (IOException)
@@ -256,7 +254,7 @@ public partial class MainWindow : Window
         }
 
         var watch = System.Diagnostics.Stopwatch.StartNew();
-
+        byte[]? buffer = null;
         try
         {
             using var db = StreamingDatabase.Compile(pattern, flags);
@@ -264,7 +262,7 @@ public partial class MainWindow : Window
 
             using var stream = File.OpenRead(file);
 
-            byte[] buffer = ArrayPool<byte>.Shared.Rent(65535);
+            buffer = ArrayPool<byte>.Shared.Rent(65535);
             int readSize = 0;
             int totalSize = 0;
             var matches = new List<MatchContent>();
@@ -301,14 +299,16 @@ public partial class MainWindow : Window
             }
 
             db.CloseStream();
-
-            ArrayPool<byte>.Shared.Return(buffer);
-            ViewModel.Matches = new(matches);
+            ViewModel.Matches = [.. matches];
         }
         catch (ArgumentException ex)
         {
             notificationManager.Show(new Notification("error", ex.Message, NotificationType.Error));
             return;
+        } 
+        finally
+        {
+           if (buffer != null) ArrayPool<byte>.Shared.Return(buffer);
         }
 
         watch.Stop();

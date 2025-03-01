@@ -11,7 +11,7 @@ class Program
     [STAThread]
     public static void Main(string[] args) => BuildAvaloniaApp()
         .With(new Win32PlatformOptions
-        { RenderingMode = new[] { Win32RenderingMode.AngleEgl } })
+        { RenderingMode = [Win32RenderingMode.AngleEgl] })
         .StartWithClassicDesktopLifetime(args);
 
     // Avalonia configuration, don't remove; also used by visual designer.

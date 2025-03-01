@@ -15,15 +15,15 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="ActiproSoftware.Controls.Avalonia" Version="25.1.0" />
-    <PackageReference Include="ActiproSoftware.Controls.Avalonia.Themes.DataGrid" Version="25.1.0" />
-    <PackageReference Include="Avalonia" Version="11.2.2" />
+    <PackageReference Include="ActiproSoftware.Controls.Avalonia" Version="25.1.1" />
+    <PackageReference Include="ActiproSoftware.Controls.Avalonia.Themes.DataGrid" Version="25.1.1" />
+    <PackageReference Include="Avalonia" Version="11.2.5" />
     <!--<PackageReference Include="Avalonia.Themes.Fluent" Version="11.2.0-beta1" />-->
     <!--<PackageReference Include="Avalonia.Fonts.Inter" Version="11.2.0-beta1" />-->
-    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0-preview3" />
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
 
     <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
-    <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.2.0" />
+    <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.2.5" />
   </ItemGroup>
 	
 </Project>

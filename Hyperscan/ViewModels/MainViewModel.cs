@@ -9,7 +9,7 @@ namespace Hyperscan.ViewModels;
 public sealed partial class MainViewModel : ObservableObject
 {
     [ObservableProperty]
-    private ObservableCollection<MatchContent>? matches;
+    public partial ObservableCollection<MatchContent>? Matches { get; set; }
 
     public List<HsFlag> Flags { get; }
 
@@ -20,7 +20,7 @@ public sealed partial class MainViewModel : ObservableObject
     //public string? HexText { get; set; }
 
     [ObservableProperty]
-    private string? filePath;
+    public partial string? FilePath { get; set; }
 
     public MainViewModel()
     {

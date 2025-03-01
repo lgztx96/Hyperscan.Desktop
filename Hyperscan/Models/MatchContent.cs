@@ -2,14 +2,14 @@
 
 namespace Hyperscan.Models;
 
-public partial class MatchContent(uint offset, string content, string hex) : ObservableObject
+public sealed partial class MatchContent(uint offset, string content, string hex) : ObservableObject
 {
     [ObservableProperty]
-    private string content = content;
+    public partial string Content { get; set; } = content;
 
     [ObservableProperty]
-    private uint offset = offset;
+    public partial uint Offset { get; set; } = offset;
 
     [ObservableProperty]
-    private string hex = hex;
+    public partial string Hex { get; set; } = hex;
 }

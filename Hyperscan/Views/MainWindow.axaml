@@ -1,4 +1,4 @@
-<Window
+﻿<Window
     x:Class="Hyperscan.Views.MainWindow"
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -12,13 +12,15 @@
     Title="hyperscan"
     Width="800"
     Height="450"
+    MinWidth="800"
+    MinHeight="450"
     d:DesignHeight="350"
     d:DesignWidth="800"
     x:CompileBindings="True"
     x:DataType="vm:MainViewModel"
     FontFamily="微软雅黑"
     FontWeight="Regular"
-    Icon="/Assets/avalonia-logo.ico"
+    Icon="/Assets/logo.ico"
     TransparencyLevelHint="Mica"
     WindowStartupLocation="CenterScreen"
     mc:Ignorable="d">
@@ -33,6 +35,7 @@
     </Window.Resources>-->
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="40" />
             <RowDefinition Height="Auto" MinHeight="40" />
             <RowDefinition />
             <RowDefinition Height="Auto" />
@@ -42,10 +45,31 @@
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
+        <actipro:ChromedTitleBar Grid.ColumnSpan="3">
+            <actipro:ChromedTitleBar.LeftContent>
+                <StackPanel Orientation="Horizontal">
+                    <Image
+                        Width="20"
+                        Height="20"
+                        Margin="10,0,0,0"
+                        VerticalAlignment="Center"
+                        Source="/Assets/logo.png"
+                        UseLayoutRounding="True" />
+                    <TextBlock
+                        Margin="10,0,0,0"
+                        VerticalAlignment="Center"
+                        FontWeight="Bold"
+                        Text="hyperscan" />
+                </StackPanel>
 
+            </actipro:ChromedTitleBar.LeftContent>
+            <actipro:ChromedTitleBar.RightContent>
+                <actipro:ToggleThemeButton Theme="{actipro:ControlTheme TitleBarToggleThemeButton}" ToolTip.Tip="Toggle Theme" />
+            </actipro:ChromedTitleBar.RightContent>
+        </actipro:ChromedTitleBar>
         <TabControl
             x:Name="MainTab"
-            Grid.Row="1"
+            Grid.Row="2"
             Grid.ColumnSpan="3">
             <TabControl.Items>
                 <TabItem Header="text">
@@ -108,6 +132,7 @@
                             CanUserResizeColumns="True"
                             CanUserSortColumns="False"
                             GridLinesVisibility="All"
+                            IsReadOnly="True"
                             ItemsSource="{Binding Matches}"
                             SelectionMode="Extended">
                             <DataGrid.Columns>
@@ -122,18 +147,19 @@
         </TabControl>
         <TextBox
             x:Name="PatternTextBox"
+            Grid.Row="1"
             Margin="10,10,5,5"
             Classes="has-clear-button"
             TextWrapping="Wrap"
             Watermark="insert regular expression here" />
         <Button
-            Grid.Row="0"
+            Grid.Row="1"
             Grid.Column="2"
             Margin="5,10,10,5"
             Click="MatchOnClick"
             Content="OK" />
         <SplitButton
-            Grid.Row="0"
+            Grid.Row="1"
             Grid.Column="1"
             Margin="5,10,5,5"
             Content="Flags">
@@ -169,7 +195,7 @@
         </SplitButton>
         <TextBlock
             x:Name="MatchInfo"
-            Grid.Row="2"
+            Grid.Row="3"
             Grid.ColumnSpan="3"
             Margin="5"
             HorizontalAlignment="Right"
