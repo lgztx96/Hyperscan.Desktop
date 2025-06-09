@@ -466,3 +466,4 @@ $RECYCLE.BIN/
 /Hyperscan.Desktop/runtimes/win-x86/native/hs.lib
 /Hyperscan.Desktop/runtimes/win-x86/native/libHarfBuzzSharp.lib
 /Hyperscan.Desktop/runtimes/win-x86/native/libSkiaSharp.lib
+*.lib
