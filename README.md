@@ -1,3 +1,4 @@
 # Hyperscan Regex Desktop Tool
 
-![Snipaste_2025-03-01_11-51-58](https://github.com/user-attachments/assets/3659a403-2839-4dbe-b745-d50a3007d9a9)
+![image](https://github.com/user-attachments/assets/b8d43b7e-a233-4a09-80c5-179d4005a76c)
+
