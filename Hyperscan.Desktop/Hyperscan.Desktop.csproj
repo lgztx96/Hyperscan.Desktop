@@ -1,15 +1,16 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
 	<OutputType>WinExe</OutputType>
-    <TargetFramework>net9.0</TargetFramework>
+    <TargetFramework>net10.0-windows</TargetFramework>
     <Nullable>enable</Nullable>
 	<PublishAot>true</PublishAot>
 	<BuiltInComInteropSupport>false</BuiltInComInteropSupport>
-	<OptimizationPreference>Size</OptimizationPreference>
     <ApplicationManifest>app.manifest</ApplicationManifest>
-	<TrimMode>full</TrimMode>
+	<TrimMode>Link</TrimMode>
 	<Platforms>AnyCPU;x86;x64</Platforms>
+	<StaticExecutable>true</StaticExecutable>
   </PropertyGroup>
+	
   <ItemGroup>
     <AvaloniaXaml Remove="runtimes\win-64\**" />
     <Compile Remove="runtimes\win-64\**" />
@@ -18,66 +19,69 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="ActiproSoftware.Controls.Avalonia" Version="25.1.1" />
-    <PackageReference Include="ActiproSoftware.Controls.Avalonia.Themes.DataGrid" Version="25.1.1" />
-    <PackageReference Include="Avalonia.Desktop" Version="11.2.5" />
+    <!--<PackageReference Include="Avalonia.Desktop" Version="11.3.0" />-->
+    <PackageReference Include="Avalonia.Win32" Version="11.3.1" />
+    <PackageReference Include="Avalonia.Skia" Version="11.3.1" />
+    <PackageReference Include="YY-Thunks" Version="1.1.7" />
+    <!--<PackageReference Include="VC-LTL" Version="5.2.1" />-->
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Hyperscan\Hyperscan.csproj" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(RuntimeIdentifier)' == 'win-x86'">
-	<DirectPInvoke Include="libHarfBuzzSharp" />
-	<NativeLibrary Include="runtimes\win-x86\native\libHarfBuzzSharp.lib" />
-	<DirectPInvoke Include="libSkiaSharp" />
-	<NativeLibrary Include="runtimes\win-x86\native\libSkiaSharp.lib" />
-	<DirectPInvoke Include="av_libglesv2" />
-	<NativeLibrary Include="runtimes\win-x86\native\av_libglesv2.lib" />
-	<DirectPInvoke Include="hs" />
-	<NativeLibrary Include="runtimes\win-x86\native\hs.lib" />
-  </ItemGroup>
+	<ItemGroup>
+		<LinkerArg Include="/LTCG"></LinkerArg>
+		<LinkerArg Include="runtimes\$(RuntimeIdentifier)\native\lib.exp"></LinkerArg>
+		<DirectPInvoke Include="libHarfBuzzSharp" />
+		<NativeLibrary Include="runtimes\$(RuntimeIdentifier)\native\libHarfBuzzSharp.lib" />
+		<DirectPInvoke Include="libSkiaSharp" />
+		<NativeLibrary Include="runtimes\$(RuntimeIdentifier)\native\libSkiaSharp.lib" />
+		<DirectPInvoke Include="av_libglesv2" />
+		<NativeLibrary Include="runtimes\$(RuntimeIdentifier)\native\av_libglesv2.lib" />
+		<DirectPInvoke Include="hs" />
+		<NativeLibrary Include="runtimes\$(RuntimeIdentifier)\native\hs.lib" />
+		<DirectPInvoke Include="tree-sitter-regex" />
+		<NativeLibrary Include="runtimes\$(RuntimeIdentifier)\native\tree-sitter-regex.lib" />
+		<NativeLibrary Include="D:\vcpkg\installed\x64-windows-static\lib\tree-sitter.lib" />
+	</ItemGroup>
+	
+	<PropertyGroup>
+		<IlcInstructionSet>avx2</IlcInstructionSet>
+		<IlcOptimizationPreference>Speed</IlcOptimizationPreference>
+		<AutoreleasePoolSupport>false</AutoreleasePoolSupport>
+		<EnableUnsafeBinaryFormatterSerialization>false</EnableUnsafeBinaryFormatterSerialization>
+		<EnableUnsafeUTF7Encoding>false</EnableUnsafeUTF7Encoding>
+		<EventSourceSupport>false</EventSourceSupport>
+		<HttpActivityPropagationSupport>false</HttpActivityPropagationSupport>
+		<MetadataUpdaterSupport>false</MetadataUpdaterSupport>
+		<UseSystemResourceKeys>true</UseSystemResourceKeys>
+		<IlcGenerateStackTraceData>false</IlcGenerateStackTraceData>
+		<IlcTrimMetadata>true</IlcTrimMetadata>
+		<!--<IlcDisableReflection>true</IlcDisableReflection>-->
+		<IlcFoldIdenticalMethodBodies>true</IlcFoldIdenticalMethodBodies>
+		<DebuggerSupport>false</DebuggerSupport>
+		<InvariantGlobalization>true</InvariantGlobalization>
+		<MetricsSupport>false</MetricsSupport>
+		<!--<StackTraceSupport>false</StackTraceSupport>-->
+		<UseNativeHttpHandler>true</UseNativeHttpHandler>
+		<IlcGenerateCompleteTypeMetadata>false</IlcGenerateCompleteTypeMetadata>
+		<IlcDisableUnhandledExceptionExperience>true</IlcDisableUnhandledExceptionExperience>
+		<XmlResolverIsNetworkingEnabledByDefault>false</XmlResolverIsNetworkingEnabledByDefault>
+	</PropertyGroup>
 
-  <ItemGroup Condition="'$(RuntimeIdentifier)' == 'win-x64'">
-	<DirectPInvoke Include="libHarfBuzzSharp" />
-	<NativeLibrary Include="runtimes\win-x64\native\libHarfBuzzSharp.lib" />
-	<DirectPInvoke Include="libSkiaSharp" />
-	<NativeLibrary Include="runtimes\win-x64\native\libSkiaSharp.lib" />
-	<DirectPInvoke Include="av_libglesv2" />
-	<NativeLibrary Include="runtimes\win-x64\native\av_libglesv2.lib" />
-	<DirectPInvoke Include="hs" />
-	<NativeLibrary Include="runtimes\win-x64\native\hs.lib" />
-  </ItemGroup>
-
-  <PropertyGroup>
-	<IlcOptimizationPreference>Size</IlcOptimizationPreference>
-	<AutoreleasePoolSupport>false</AutoreleasePoolSupport>
-	<EnableUnsafeBinaryFormatterSerialization>false</EnableUnsafeBinaryFormatterSerialization>
-	<EnableUnsafeUTF7Encoding>false</EnableUnsafeUTF7Encoding>
-	<EventSourceSupport>false</EventSourceSupport>
-	<HttpActivityPropagationSupport>false</HttpActivityPropagationSupport>
-	<MetadataUpdaterSupport>false</MetadataUpdaterSupport>
-	<UseSystemResourceKeys>true</UseSystemResourceKeys>
-	<IlcGenerateStackTraceData>false</IlcGenerateStackTraceData>
-	<IlcTrimMetadata>true</IlcTrimMetadata>
-	<!-- <IlcDisableReflection>true</IlcDisableReflection> -->
-	<IlcFoldIdenticalMethodBodies>true</IlcFoldIdenticalMethodBodies>
-	<DebuggerSupport>false</DebuggerSupport>
-	<InvariantGlobalization>true</InvariantGlobalization>
-	<MetricsSupport>false</MetricsSupport>
-	<StackTraceSupport>false</StackTraceSupport>
-	<UseNativeHttpHandler>true</UseNativeHttpHandler>
-	<!--These can help when debugging weird exceptions especially when reflection is involved. See https://github.com/dotnet/corert/blob/master/Documentation/using-corert/optimizing-corert.md -->
-	<!--RootAllApplicationAssemblies: False -> TrimMode:link See https://github.com/dotnet/runtimelab/issues/597 and https://github.com/dotnet/runtimelab/blob/feature/NativeAOT/docs/using-nativeaot/optimizing.md -->
-	<IlcGenerateCompleteTypeMetadata>false</IlcGenerateCompleteTypeMetadata>
-	<IlcDisableUnhandledExceptionExperience>true</IlcDisableUnhandledExceptionExperience>
-  </PropertyGroup>
+	<PropertyGroup Label="Avalonia">
+	  <AvaloniaUseCompiledBindingsByDefault>True</AvaloniaUseCompiledBindingsByDefault>
+	  <AvaloniaXamlVerboseExceptions>True</AvaloniaXamlVerboseExceptions>
+	</PropertyGroup>
 	
   <ItemGroup Condition=" '$(Platform)' != 'x86' ">
 	<Content Include="runtimes\win-x64\native\hs.dll" CopyToOutputDirectory="PreserveNewest" TargetPath="%(Filename)%(Extension)" />
+	<Content Include="runtimes\win-x64\native\tree-sitter-regex.dll" CopyToOutputDirectory="PreserveNewest" TargetPath="%(Filename)%(Extension)" />
   </ItemGroup>
 	
   <ItemGroup Condition=" '$(Platform)' == 'x86' ">
 	<Content Include="runtimes\win-x86\native\hs.dll" CopyToOutputDirectory="PreserveNewest" TargetPath="%(Filename)%(Extension)" />
+	<Content Include="runtimes\win-x86\native\tree-sitter-regex.dll" CopyToOutputDirectory="PreserveNewest" TargetPath="%(Filename)%(Extension)" />
   </ItemGroup>
 </Project>

@@ -7,7 +7,7 @@ using Hyperscan.Views;
 
 namespace Hyperscan;
 
-public partial class App : Application
+public sealed partial class App : Application
 {
     public override void Initialize()
     {

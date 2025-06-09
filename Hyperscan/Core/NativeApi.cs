@@ -2,10 +2,11 @@
 global using hs_compile_error_t = Hyperscan.Core.hs_compile_error;
 global using hs_platform_info_t = Hyperscan.Core.hs_platform_info;
 global using unsafe match_event_handler = delegate* unmanaged[Cdecl]<uint, ulong, ulong, uint, void*, int>;
-using hs_error_t = int;
 
+using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using hs_error_t = int;
 
 namespace Hyperscan.Core;
 
@@ -59,7 +60,20 @@ public static partial class HyperscanApi
 
     [LibraryImport("hs", StringMarshalling = StringMarshalling.Utf8)]
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
-    public static unsafe partial hs_error_t hs_compile(string expression, uint flags, uint mode, hs_platform_info_t* platform, void** db, hs_compile_error_t** error);
+    public static unsafe partial hs_error_t hs_compile(
+        string expression, uint flags, uint mode, hs_platform_info_t* platform, void** db, hs_compile_error_t** error);
+
+    [LibraryImport("hs", StringMarshalling = StringMarshalling.Utf8)]
+    [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
+    public static unsafe partial hs_error_t hs_compile_multi(
+                                     ReadOnlySpan<string> expressions,
+                                     ReadOnlySpan<uint> flags,
+                                     ReadOnlySpan<uint> ids,
+                                     uint elements,
+                                     uint mode,
+                                     hs_platform_info_t* platform,
+                                     void** db,
+                                     hs_compile_error_t** error);
 
     [LibraryImport("hs")]
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]

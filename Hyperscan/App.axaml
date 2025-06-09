@@ -1,15 +1,54 @@
-<Application
+﻿<Application
     x:Class="Hyperscan.App"
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:actipro="http://schemas.actiprosoftware.com/avaloniaui"
     RequestedThemeVariant="Default">
-    <!--  "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options.  -->
-
+	<Application.Resources>
+		<ResourceDictionary>
+			<ResourceDictionary.ThemeDictionaries>
+				<ResourceDictionary x:Key='Light'>
+					<Color x:Key="RegexCaretColor">#D32F2F</Color>
+					<!-- assert, ^ -->
+					<Color x:Key="RegexParenColor">#1565C0</Color>
+					<!-- ( ) -->
+					<Color x:Key="RegexBracketColor">#7B1FA2</Color>
+					<!-- [ ] -->
+					<Color x:Key="RegexClassColor">#2E7D32</Color>
+					<!-- \w, \d, etc. -->
+					<Color x:Key="RegexDashColor">#5D4037</Color>
+					<!-- - -->
+					<Color x:Key="RegexPipeColor">#00838F</Color>
+					<!-- | -->
+					<Color x:Key="RegexEscapeColor">#00897B</Color>
+					<!-- \t \n etc -->
+					<Color x:Key="RegexBraceColor">#EF6C00</Color>
+					<!-- { } -->
+					<Color x:Key="RegexDigitColor">#EF6C00</Color>
+					<!-- \d -->
+					<Color x:Key="RegexEndAssertColor">#C62828</Color>
+					<!-- $ -->
+				</ResourceDictionary>
+				<ResourceDictionary x:Key='Dark'>
+					<Color x:Key="RegexCaretColor">#E06C75</Color>
+					<Color x:Key="RegexParenColor">#61AFEF</Color>
+					<Color x:Key="RegexBracketColor">#C678DD</Color>
+					<Color x:Key="RegexClassColor">#98C379</Color>
+					<Color x:Key="RegexDashColor">#ABB2BF</Color>
+					<Color x:Key="RegexPipeColor">#56B6C2</Color>
+					<Color x:Key="RegexEscapeColor">#56B6C2</Color>
+					<Color x:Key="RegexBraceColor">#D19A66</Color>
+					<Color x:Key="RegexDigitColor">#D19A66</Color>
+					<Color x:Key="RegexEndAssertColor">#E06C75</Color>
+				</ResourceDictionary>
+			</ResourceDictionary.ThemeDictionaries>
+		</ResourceDictionary>
+	</Application.Resources>
     <Application.Styles>
-		<actipro:ModernTheme>
-			<!-- When using Native DataGrid -->
-			<StyleInclude Source="avares://ActiproSoftware.Avalonia.Themes.Native.DataGrid/Themes/Common.axaml"/>
-		</actipro:ModernTheme>
+        <actipro:ModernTheme>
+			<StyleInclude Source="/Styles/TreeDataGrid.axaml" />
+			
+        </actipro:ModernTheme>
     </Application.Styles>
+
 </Application>

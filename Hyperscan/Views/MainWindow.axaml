@@ -3,13 +3,13 @@
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:actipro="http://schemas.actiprosoftware.com/avaloniaui"
-    xmlns:avaloniaHex="clr-namespace:AvaloniaHex;assembly=AvaloniaHex"
+    xmlns:actiproPrims="using:ActiproSoftware.UI.Avalonia.Controls.Primitives"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:rendering="clr-namespace:AvaloniaHex.Rendering;assembly=AvaloniaHex"
     xmlns:views="clr-namespace:Hyperscan.Views"
     xmlns:vm="using:Hyperscan.ViewModels"
-    Title="hyperscan"
+    x:Name="rootWindow"
+    Title=""
     Width="800"
     Height="450"
     MinWidth="800"
@@ -18,12 +18,23 @@
     d:DesignWidth="800"
     x:CompileBindings="True"
     x:DataType="vm:MainViewModel"
+    Background="Transparent"
+    ExtendClientAreaChromeHints="SystemChrome"
+    ExtendClientAreaTitleBarHeightHint="40"
     FontFamily="微软雅黑"
     FontWeight="Regular"
     Icon="/Assets/logo.ico"
-    TransparencyLevelHint="Mica"
+    TransparencyLevelHint="Mica,None"
+    UseLayoutRounding="True"
     WindowStartupLocation="CenterScreen"
     mc:Ignorable="d">
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceInclude Source="avares://Hyperscan/Styles/TextBox.axaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
     <!--<Window.Styles>
         <Style Selector="CheckBox.noContent /template/ ContentPresenter#ContentPresenter">
             <Setter Property="IsVisible" Value="False" />
@@ -33,20 +44,12 @@
         <x:Double x:Key="TabItemMinHeight">30</x:Double>
         <x:Double x:Key="TabItemHeaderFontSize">17</x:Double>
     </Window.Resources>-->
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="40" />
-            <RowDefinition Height="Auto" MinHeight="40" />
-            <RowDefinition />
-            <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition />
-            <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="Auto" />
-        </Grid.ColumnDefinitions>
-        <actipro:ChromedTitleBar Grid.ColumnSpan="3">
-            <actipro:ChromedTitleBar.LeftContent>
+    <DockPanel Margin="{Binding #rootWindow.OffScreenMargin}">
+        <actipro:WindowTitleBar
+            Background="Transparent"
+            BorderThickness="0,0,0,1"
+            DockPanel.Dock="Top">
+            <actipro:WindowTitleBar.LeftContent>
                 <StackPanel Orientation="Horizontal">
                     <Image
                         Width="20"
@@ -61,144 +64,207 @@
                         FontWeight="Bold"
                         Text="hyperscan" />
                 </StackPanel>
-
-            </actipro:ChromedTitleBar.LeftContent>
-            <actipro:ChromedTitleBar.RightContent>
-                <actipro:ToggleThemeButton Theme="{actipro:ControlTheme TitleBarToggleThemeButton}" ToolTip.Tip="Toggle Theme" />
-            </actipro:ChromedTitleBar.RightContent>
-        </actipro:ChromedTitleBar>
-        <TabControl
-            x:Name="MainTab"
-            Grid.Row="2"
-            Grid.ColumnSpan="3">
-            <TabControl.Items>
-                <TabItem Header="text">
-                    <Grid RowDefinitions="*,4,*">
-                        <TextBox
-                            x:Name="MatchText"
-                            Grid.Row="0"
-                            Grid.ColumnSpan="3"
-                            AcceptsReturn="True"
-                            TextWrapping="Wrap"
-                            Watermark="insert text string here" />
-                        <GridSplitter Grid.Row="1" ResizeDirection="Rows" />
-                        <ScrollViewer
-                            Grid.Row="2"
-                            Grid.ColumnSpan="3"
-                            Margin="0,5,0,0"
-                            HorizontalScrollBarVisibility="Disabled"
-                            VerticalScrollBarVisibility="Auto">
-                            <TextBlock x:Name="MatchResult" TextWrapping="Wrap" />
-                        </ScrollViewer>
-                    </Grid>
-                </TabItem>
-                <TabItem Header="hex">
-                    <Grid RowDefinitions="*,4,*">
-                        <TextBox
-                            x:Name="MatchHexText"
-                            Grid.Row="0"
-                            Grid.ColumnSpan="3"
-                            AcceptsReturn="True"
-                            TextWrapping="Wrap"
-                            Watermark="insert hex string here. such as 41 33 20 43 41 50" />
-                        <GridSplitter Grid.Row="1" ResizeDirection="Rows" />
-                        <ScrollViewer
-                            Grid.Row="2"
-                            Grid.ColumnSpan="3"
-                            Margin="0,5,0,0"
-                            HorizontalScrollBarVisibility="Disabled"
-                            VerticalScrollBarVisibility="Auto">
-                            <TextBlock x:Name="MatchHexResult" TextWrapping="Wrap" />
-                        </ScrollViewer>
-                    </Grid>
-                </TabItem>
-                <TabItem Header="file">
-                    <Grid ColumnDefinitions="*,auto" RowDefinitions="auto,*">
-                        <Button
-                            Grid.Row="0"
-                            Grid.Column="1"
-                            Margin="10,0,0,0"
-                            Click="OpenOnClick"
-                            Content="OPEN" />
-                        <TextBox
-                            VerticalAlignment="Center"
-                            IsReadOnly="True"
-                            Text="{Binding FilePath, Mode=OneWay}" />
-                        <DataGrid
-                            Grid.Row="1"
-                            Grid.ColumnSpan="2"
-                            Margin="0,10,0,0"
-                            CanUserReorderColumns="True"
-                            CanUserResizeColumns="True"
-                            CanUserSortColumns="False"
-                            GridLinesVisibility="All"
-                            IsReadOnly="True"
-                            ItemsSource="{Binding Matches}"
-                            SelectionMode="Extended">
-                            <DataGrid.Columns>
-                                <DataGridTextColumn Binding="{Binding Offset}" Header="offset" />
-                                <DataGridTextColumn Binding="{Binding Content}" Header="content" />
-                                <DataGridTextColumn Binding="{Binding Hex}" Header="hex" />
-                            </DataGrid.Columns>
-                        </DataGrid>
-                    </Grid>
-                </TabItem>
-            </TabControl.Items>
-        </TabControl>
-        <TextBox
-            x:Name="PatternTextBox"
-            Grid.Row="1"
-            Margin="10,10,5,5"
-            Classes="has-clear-button"
-            TextWrapping="Wrap"
-            Watermark="insert regular expression here" />
-        <Button
-            Grid.Row="1"
-            Grid.Column="2"
-            Margin="5,10,10,5"
-            Click="MatchOnClick"
-            Content="OK" />
-        <SplitButton
-            Grid.Row="1"
-            Grid.Column="1"
-            Margin="5,10,5,5"
-            Content="Flags">
-            <SplitButton.Flyout>
-                <Flyout Placement="Bottom">
-                    <ScrollViewer Width="200">
-                        <ItemsControl
-                            x:Name="Flags"
-                            Padding="10"
-                            ItemsSource="{Binding Flags, Mode=OneTime}">
-                            <ItemsControl.ItemTemplate>
-                                <DataTemplate>
-                                    <Grid Margin="0,0,0,5" ColumnDefinitions="*,auto">
-                                        <TextBlock FontSize="13" TextWrapping="Wrap">
-                                            <Run FontWeight="Bold" Text="{Binding Title, Mode=OneTime}" />
-                                            <LineBreak />
-                                            <Run Text="{Binding Description, Mode=OneTime}" />
-                                        </TextBlock>
-                                        <CheckBox
-                                            Grid.Column="1"
-                                            Margin="5,0,0,0"
-                                            Padding="0"
-                                            HorizontalAlignment="Center"
-                                            VerticalAlignment="Center"
-                                            IsChecked="{Binding IsSelected, Mode=TwoWay}" />
-                                    </Grid>
-                                </DataTemplate>
-                            </ItemsControl.ItemTemplate>
-                        </ItemsControl>
-                    </ScrollViewer>
-                </Flyout>
-            </SplitButton.Flyout>
-        </SplitButton>
-        <TextBlock
-            x:Name="MatchInfo"
-            Grid.Row="3"
-            Grid.ColumnSpan="3"
-            Margin="5"
-            HorizontalAlignment="Right"
-            VerticalAlignment="Bottom" />
-    </Grid>
+            </actipro:WindowTitleBar.LeftContent>
+            <actipro:WindowTitleBar.RightContent>
+                <StackPanel Orientation="Horizontal">
+                    <ToggleButton
+                        Click="OnEnterAlwaysOnTopBthClick"
+                        IsChecked="False"
+                        IsThreeState="False"
+                        Theme="{actipro:ControlTheme TitleBarButton}"
+                        ToolTip.Tip="Always on top">
+                        <ToggleButton.Content>
+                            <PathIcon
+                                Width="13"
+                                Height="13"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Data="F1 M 16.298828 1.25 C 16.624348 1.25 16.935221 1.316732 17.231445 1.450195 C 17.527668 1.58366 17.788086 1.762695 18.012695 1.987305 C 18.237305 2.211914 18.41634 2.472332 18.549805 2.768555 C 18.683268 3.064779 18.75 3.375652 18.75 3.701172 L 18.75 16.298828 C 18.75 16.62435 18.683268 16.935221 18.549805 17.231445 C 18.41634 17.52767 18.237305 17.788086 18.012695 18.012695 C 17.788086 18.237305 17.527668 18.416342 17.231445 18.549805 C 16.935221 18.683268 16.624348 18.75 16.298828 18.75 L 11.875 18.75 C 11.705729 18.75 11.559244 18.68815 11.435547 18.564453 C 11.311849 18.440756 11.25 18.294271 11.25 18.125 C 11.25 17.955729 11.311849 17.809244 11.435547 17.685547 C 11.559244 17.56185 11.705729 17.5 11.875 17.5 L 16.25 17.5 C 16.425781 17.5 16.588541 17.467447 16.738281 17.402344 C 16.88802 17.33724 17.019855 17.247721 17.133789 17.133789 C 17.247721 17.019857 17.337238 16.888021 17.402344 16.738281 C 17.467447 16.588543 17.5 16.425781 17.5 16.25 L 17.5 10 L 12.451172 10 C 12.11263 10 11.795247 9.931641 11.499023 9.794922 C 11.202799 9.658203 10.94401 9.475912 10.722656 9.248047 C 10.501302 9.020183 10.325521 8.754883 10.195312 8.452148 C 10.065104 8.149414 10 7.832031 10 7.5 L 10 2.5 L 3.75 2.5 C 3.574219 2.5 3.411458 2.532553 3.261719 2.597656 C 3.111979 2.662762 2.980143 2.752279 2.866211 2.866211 C 2.752279 2.980145 2.66276 3.11198 2.597656 3.261719 C 2.532552 3.411459 2.5 3.574219 2.5 3.75 L 2.5 8.125 C 2.5 8.294271 2.438151 8.440756 2.314453 8.564453 C 2.190755 8.688151 2.044271 8.75 1.875 8.75 C 1.705729 8.75 1.559245 8.688151 1.435547 8.564453 C 1.311849 8.440756 1.25 8.294271 1.25 8.125 L 1.25 3.701172 C 1.25 3.375652 1.316732 3.064779 1.450195 2.768555 C 1.583659 2.472332 1.762695 2.211914 1.987305 1.987305 C 2.211914 1.762695 2.472331 1.58366 2.768555 1.450195 C 3.064779 1.316732 3.375651 1.25 3.701172 1.25 Z M 17.5 8.75 L 17.5 3.75 C 17.5 3.58073 17.467447 3.419598 17.402344 3.266602 C 17.337238 3.113607 17.247721 2.980145 17.133789 2.866211 C 17.019855 2.752279 16.886393 2.662762 16.733398 2.597656 C 16.580402 2.532553 16.41927 2.5 16.25 2.5 L 11.25 2.5 L 11.25 7.5 C 11.25 7.675781 11.282552 7.84017 11.347656 7.993164 C 11.41276 8.146159 11.50065 8.277995 11.611328 8.388672 C 11.722005 8.49935 11.853841 8.58724 12.006836 8.652344 C 12.15983 8.717448 12.324219 8.75 12.5 8.75 Z M 8.125 11.25 C 8.294271 11.25 8.440755 11.31185 8.564453 11.435547 C 8.68815 11.559245 8.75 11.705729 8.75 11.875 L 8.75 18.125 C 8.75 18.294271 8.68815 18.440756 8.564453 18.564453 C 8.440755 18.68815 8.294271 18.75 8.125 18.75 C 7.955729 18.75 7.809245 18.68815 7.685547 18.564453 C 7.561849 18.440756 7.5 18.294271 7.5 18.125 L 7.5 13.378906 L 2.314453 18.564453 C 2.190755 18.68815 2.044271 18.75 1.875 18.75 C 1.705729 18.75 1.559245 18.68815 1.435547 18.564453 C 1.311849 18.440756 1.25 18.294271 1.25 18.125 C 1.25 17.955729 1.311849 17.809244 1.435547 17.685547 L 6.621094 12.5 L 1.875 12.5 C 1.705729 12.5 1.559245 12.438151 1.435547 12.314453 C 1.311849 12.190756 1.25 12.044271 1.25 11.875 C 1.25 11.705729 1.311849 11.559245 1.435547 11.435547 C 1.559245 11.31185 1.705729 11.25 1.875 11.25 Z " />
+                        </ToggleButton.Content>
+                    </ToggleButton>
+                    <actipro:ToggleThemeButton Theme="{actipro:ControlTheme TitleBarToggleThemeButton}" ToolTip.Tip="Toggle Theme" />
+                </StackPanel>
+            </actipro:WindowTitleBar.RightContent>
+        </actipro:WindowTitleBar>
+        <actiproPrims:OverlayInputFilter DockPanel.Dock="Bottom">
+            <Border
+                BorderBrush="{actipro:ThemeResource StatusBarBorderBrush}"
+                BorderThickness="{actipro:ThemeResource StatusBarBorderThickness}"
+                TextElement.Foreground="{actipro:ThemeResource StatusBarForegroundBrush}">
+                <TextBlock
+                    x:Name="MatchInfo"
+                    Margin="5"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Bottom" />
+            </Border>
+        </actiproPrims:OverlayInputFilter>
+        <actiproPrims:OverlayInputFilter>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" MinHeight="40" />
+                    <RowDefinition />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <TabControl
+                    x:Name="MainTab"
+                    Grid.Row="2"
+                    Grid.ColumnSpan="3">
+                    <TabControl.Items>
+                        <TabItem Header="text">
+                            <Grid RowDefinitions="*,4,*">
+                                <TextBox
+                                    x:Name="MatchText"
+                                    Grid.Row="0"
+                                    Grid.ColumnSpan="3"
+                                    AcceptsReturn="True"
+                                    TextWrapping="Wrap"
+                                    Watermark="insert text string here" />
+                                <GridSplitter Grid.Row="1" ResizeDirection="Rows" />
+                                <ScrollViewer
+                                    Grid.Row="2"
+                                    Grid.ColumnSpan="3"
+                                    Margin="0,5,0,0"
+                                    HorizontalScrollBarVisibility="Disabled"
+                                    VerticalScrollBarVisibility="Auto">
+                                    <TextBlock x:Name="MatchResult" TextWrapping="Wrap" />
+                                </ScrollViewer>
+                            </Grid>
+                        </TabItem>
+                        <TabItem Header="hex">
+                            <Grid RowDefinitions="*,4,*">
+                                <TextBox
+                                    x:Name="MatchHexText"
+                                    Grid.Row="0"
+                                    Grid.ColumnSpan="3"
+                                    AcceptsReturn="True"
+                                    TextWrapping="Wrap"
+                                    Watermark="insert hex string here. such as 41 33 20 43 41 50 or 413320434150" />
+                                <GridSplitter Grid.Row="1" ResizeDirection="Rows" />
+                                <ScrollViewer
+                                    Grid.Row="2"
+                                    Grid.ColumnSpan="3"
+                                    Margin="0,5,0,0"
+                                    HorizontalScrollBarVisibility="Disabled"
+                                    VerticalScrollBarVisibility="Auto">
+                                    <TextBlock x:Name="MatchHexResult" TextWrapping="Wrap" />
+                                </ScrollViewer>
+                            </Grid>
+                        </TabItem>
+                        <TabItem Header="file">
+                            <Grid ColumnDefinitions="*,auto" RowDefinitions="auto,*">
+                                <Button
+                                    Grid.Row="0"
+                                    Grid.Column="1"
+                                    Margin="10,0,0,0"
+                                    Click="OpenOnClick"
+                                    Content="OPEN" />
+                                <TextBox
+                                    VerticalAlignment="Center"
+                                    IsReadOnly="True"
+                                    Text="{Binding FilePath, Mode=OneWay}"
+                                    Watermark="open any file as raw binary stream" />
+                                <!--<DataGrid
+                                    Name="AS"
+                                    Grid.Row="1"
+                                    Grid.ColumnSpan="2"
+                                    Margin="0,10,0,0"
+                                    actipro:ThemeProperties.ScrollBarHasLineButtons="True"
+                                    CanUserReorderColumns="True"
+                                    CanUserResizeColumns="True"
+                                    GridLinesVisibility="All"
+                                    IsReadOnly="True"
+                                    ItemsSource="{Binding Matches, Mode=OneWay}"
+                                    SelectionMode="Extended">
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn
+                                            Binding="{Binding Offset, Mode=OneWay}"
+                                            CanUserSort="True"
+                                            Header="offset" />
+                                        <DataGridTextColumn
+                                            Width="200"
+                                            Binding="{Binding Content, Mode=OneWay}"
+                                            CanUserSort="False"
+                                            Header="content (utf8)" />
+                                        <DataGridTextColumn
+                                            Width="100"
+                                            Binding="{Binding Hex, Mode=OneWay}"
+                                            CanUserSort="False"
+                                            Header="hex" />
+                                        <DataGridTextColumn
+                                            Binding="{Binding ByteLength, Mode=OneWay}"
+                                            CanUserSort="True"
+                                            Header="byte length" />
+                                    </DataGrid.Columns>
+                                </DataGrid>-->
+                                <TreeDataGrid
+                                    Grid.Row="1"
+                                    Grid.ColumnSpan="2"
+                                    Margin="0,10,0,0"
+                                    Source="{Binding Source, Mode=OneWay}" />
+                            </Grid>
+                        </TabItem>
+                    </TabControl.Items>
+                </TabControl>
+                <TextBox
+                    x:Name="PatternTextBox"
+                    Grid.Row="1"
+                    Grid.ColumnSpan="3"
+                    Margin="10,10,10,5"
+                    Classes="has-clear-button"
+                    Theme="{DynamicResource ResourceKey=HighlightTextBox}"
+                    Watermark="insert your regular expression here" />
+                <StackPanel
+                    Grid.Row="0"
+                    Grid.ColumnSpan="3"
+                    Margin="0,10,10,0"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Center"
+                    Orientation="Horizontal"
+                    Spacing="10">
+                    <SplitButton Content="Flags">
+                        <SplitButton.Flyout>
+                            <Flyout Placement="Bottom">
+                                <ScrollViewer Width="250">
+                                    <ItemsControl
+                                        x:Name="Flags"
+                                        Padding="10"
+                                        ItemsSource="{Binding Flags, Mode=OneTime}">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <Grid Margin="0,0,0,5" ColumnDefinitions="*,auto">
+                                                    <TextBlock FontSize="13" TextWrapping="Wrap">
+                                                        <Run FontWeight="Bold" Text="{Binding Title, Mode=OneTime}" />
+                                                        <LineBreak />
+                                                        <Run Text="{Binding Description, Mode=OneTime}" />
+                                                    </TextBlock>
+                                                    <CheckBox
+                                                        Grid.Column="1"
+                                                        Margin="5,0,0,0"
+                                                        Padding="0"
+                                                        HorizontalAlignment="Center"
+                                                        VerticalAlignment="Center"
+                                                        IsChecked="{Binding IsSelected, Mode=TwoWay}" />
+                                                </Grid>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </ScrollViewer>
+                            </Flyout>
+                        </SplitButton.Flyout>
+                    </SplitButton>
+                    <Button
+                        Grid.Row="0"
+                        Grid.Column="2"
+                        Click="MatchOnClick"
+                        Content="OK" />
+                </StackPanel>
+            </Grid>
+        </actiproPrims:OverlayInputFilter>
+    </DockPanel>
 </Window>

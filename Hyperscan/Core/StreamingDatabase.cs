@@ -46,8 +46,36 @@ public sealed unsafe class StreamingDatabase : IDisposable
         hs_compile_error_t* compile_err = null;
 
         if (hs_compile(pattern,
-            HS_FLAG_SOM_LEFTMOST | flags,
+            flags,
             HS_MODE_STREAM | HS_MODE_SOM_HORIZON_LARGE,
+            null,
+            &database,
+            &compile_err) != HS_SUCCESS)
+        {
+            string err = Utf8ByteToString(compile_err->message);
+            hs_free_compile_error(compile_err);
+            throw new ArgumentException(err);
+        }
+
+        return new StreamingDatabase(database);
+    }
+
+    public static StreamingDatabase Compile(ReadOnlySpan<string> patterns, ReadOnlySpan<uint> flags)
+    {
+        void* database = null;
+        hs_compile_error_t* compile_err = null;
+
+        Span<uint> ids = stackalloc uint[patterns.Length];
+        for (int i = 0; i < patterns.Length; i++)
+        {
+            ids[i] = (uint)i;
+        }
+
+        if (hs_compile_multi(patterns,
+            flags,
+            ids,
+             (uint)patterns.Length,
+            HS_MODE_STREAM,
             null,
             &database,
             &compile_err) != HS_SUCCESS)
