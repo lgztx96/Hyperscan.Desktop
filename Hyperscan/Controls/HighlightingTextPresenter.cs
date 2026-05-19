@@ -79,7 +79,7 @@ public sealed partial class HighlightingTextPresenter : TextPresenter
 
         GenericTextRunProperties CreateStyle(string colorResourceKey)
         {
-            var h= Application.Current.TryGetResource(colorResourceKey, Application.Current.ActualThemeVariant, out var color);
+            Application.Current!.TryGetResource(colorResourceKey, Application.Current.ActualThemeVariant, out var color);
 
             return new GenericTextRunProperties(
                 typeface,
@@ -149,7 +149,6 @@ public sealed partial class HighlightingTextPresenter : TextPresenter
         if (lastJson?.Count > 0)
         {
             highlightOverrides = [];
-            //var highlightProperties = new GenericTextRunProperties(typeface, FontFeatures, FontSize, foregroundBrush: highlightBrush, backgroundBrush: Background);
             var defaultProperties = new GenericTextRunProperties(typeface, fontFeatures: FontFeatures, fontRenderingEmSize: FontSize, foregroundBrush: Foreground, backgroundBrush: Background);
 
             foreach (var range in lastJson)
@@ -157,25 +156,6 @@ public sealed partial class HighlightingTextPresenter : TextPresenter
                 var p = styleMap.TryGetValue(range.Type, out var style) ? style : defaultProperties;
                 highlightOverrides.Add(new(range.Index, range.Length, p));
             }
-            //var range = list[0];
-            //highlightOverrides.Add(new(range.start, range.len, highlightProperties));
-            //int lastOffset = range.start + range.len;
-
-            //for (int i = 1; i < list.Count; i++)
-            //{
-            //    range = list[i];
-            //    var gapLength = range.start - lastOffset;
-
-            //    if (gapLength > 0)
-            //    {
-            //        // textStyleOverrides do not fallback when the length ends, so manually inserting
-            //        // a fallback between highlighted words is required
-            //        highlightOverrides.Add(new(lastOffset, gapLength, defaultProperties));
-            //    }
-
-            //    highlightOverrides.Add(new(range.start, range.len, highlightProperties));
-            //    lastOffset = range.start + range.len;
-            //}
         }
 
         if (!string.IsNullOrEmpty(preeditText))

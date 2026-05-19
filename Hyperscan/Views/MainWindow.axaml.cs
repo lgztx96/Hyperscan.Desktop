@@ -57,7 +57,7 @@ public partial class MainWindow : Window
         TextOptions.SetTextRenderingMode(this, TextRenderingMode.SubpixelAntialias);
         RenderOptions.SetEdgeMode(this, EdgeMode.Antialias);
 
-        viewModel.Source = [];
+        viewModel.Matches = [];
     }
 
     void Initialize()
@@ -173,7 +173,7 @@ public partial class MainWindow : Window
             {
                 try
                 {
-                    ViewModel.Source = null;
+                    ViewModel.Matches = null;
                     var matches = new List<MatchContent>();
 
                     long length = new FileInfo(ViewModel.FilePath).Length;
@@ -205,20 +205,6 @@ public partial class MainWindow : Window
 
                     view.SafeMemoryMappedViewHandle.ReleasePointer();
                     ViewModel.Matches = matches;
-
-                    ViewModel.Source = matches;
-                    //= new FlatTreeDataGridSource<MatchContent>(matches)
-                    //{
-                    //    Columns =
-                    //    {
-                    //        new TextColumn<MatchContent, uint>("offset", x => x.Offset),
-                    //        new TextColumn<MatchContent, string>("content (utf8)", x => x.Content, new GridLength(200), new TextColumnOptions<MatchContent>{ CanUserSortColumn = false }),
-                    //        new TextColumn<MatchContent, string>("hex", x => x.Hex, new GridLength(100), new TextColumnOptions<MatchContent>{ CanUserSortColumn = false }),
-                    //        new TextColumn<MatchContent, int>("byte length", x => x.ByteLength),
-                    //        new TextColumn<MatchContent, string>("", x => null, GridLength.Star, new TextColumnOptions<MatchContent>{ CanUserResizeColumn = false, CanUserSortColumn = false, BeginEditGestures = BeginEditGestures.None }),
-                    //    },
-                    //};
-
                 }
                 catch (IOException ex) when (ex.HResult == -2147024888 && !Environment.Is64BitProcess)
                 {
@@ -372,7 +358,6 @@ public partial class MainWindow : Window
 
             db.CloseStream();
             ViewModel.Matches = matches;
-            ViewModel.Source = matches;
         }
         catch (ArgumentException ex)
         {

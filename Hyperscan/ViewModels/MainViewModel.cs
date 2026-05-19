@@ -11,9 +11,6 @@ public sealed partial class MainViewModel : ObservableObject
     [ObservableProperty]
     public partial List<MatchContent>? Matches { get; set; }
 
-    [ObservableProperty]
-    public partial List<MatchContent>? Source { get; set; }
-
     public List<HsFlag> Flags { get; }
 
     [ObservableProperty]
