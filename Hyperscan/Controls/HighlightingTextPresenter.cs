@@ -83,8 +83,8 @@ public sealed partial class HighlightingTextPresenter : TextPresenter
 
             return new GenericTextRunProperties(
                 typeface,
-                fontFeatures,
-                fontSize,
+                fontFeatures: fontFeatures,
+                fontRenderingEmSize: fontSize,
                 foregroundBrush: new SolidColorBrush((Color)color),
                 backgroundBrush: background);
         }
@@ -125,20 +125,20 @@ public sealed partial class HighlightingTextPresenter : TextPresenter
 
         styleMap ??= BuildStyleMap(typeface, FontFeatures, FontSize, Background); new Dictionary<string, GenericTextRunProperties>
         {
-            ["^"] = new GenericTextRunProperties(typeface, FontFeatures, FontSize, foregroundBrush: new SolidColorBrush(Color.Parse("#E06C75")), backgroundBrush: Background),
+            ["^"] = new GenericTextRunProperties(typeface, fontFeatures: FontFeatures, fontRenderingEmSize: FontSize, foregroundBrush: new SolidColorBrush(Color.Parse("#E06C75")), backgroundBrush: Background),
            // ["pattern_character"] = new GenericTextRunProperties(typeface, FontFeatures, FontSize, foregroundBrush: new SolidColorBrush(Color.Parse("#DCDCAA")), backgroundBrush: Background),
-            ["("] = new GenericTextRunProperties(typeface, FontFeatures, FontSize, foregroundBrush: new SolidColorBrush(Color.Parse("#61AFEF")), backgroundBrush: Background),
-            [")"] = new GenericTextRunProperties(typeface, FontFeatures, FontSize, foregroundBrush: new SolidColorBrush(Color.Parse("#61AFEF")), backgroundBrush: Background),
-            ["["] = new GenericTextRunProperties(typeface, FontFeatures, FontSize, foregroundBrush: new SolidColorBrush(Color.Parse("#C678DD")), backgroundBrush: Background),
-            ["]"] = new GenericTextRunProperties(typeface, FontFeatures, FontSize, foregroundBrush: new SolidColorBrush(Color.Parse("#C678DD")), backgroundBrush: Background),
-            ["class_character"] = new GenericTextRunProperties(typeface, FontFeatures, FontSize, foregroundBrush: new SolidColorBrush(Color.Parse("#98C379")), backgroundBrush: Background),
-            ["-"] = new GenericTextRunProperties(typeface, FontFeatures, FontSize, foregroundBrush: new SolidColorBrush(Color.Parse("#ABB2BF")), backgroundBrush: Background),
-            ["|"] = new GenericTextRunProperties(typeface, FontFeatures, FontSize, foregroundBrush: new SolidColorBrush(Color.Parse("#56B6C2")), backgroundBrush: Background),
-            ["identity_escape"] = new GenericTextRunProperties(typeface, FontFeatures, FontSize, foregroundBrush: new SolidColorBrush(Color.Parse("#56B6C2")), backgroundBrush: Background),
-            ["{"] = new GenericTextRunProperties(typeface, FontFeatures, FontSize, foregroundBrush: new SolidColorBrush(Color.Parse("#D19A66")), backgroundBrush: Background),
-            ["}"] = new GenericTextRunProperties(typeface, FontFeatures, FontSize, foregroundBrush: new SolidColorBrush(Color.Parse("#D19A66")), backgroundBrush: Background),
-            ["decimal_digits"] = new GenericTextRunProperties(typeface, FontFeatures, FontSize, foregroundBrush: new SolidColorBrush(Color.Parse("#D19A66")), backgroundBrush: Background),
-            ["end_assertion"] = new GenericTextRunProperties(typeface, FontFeatures, FontSize, foregroundBrush: new SolidColorBrush(Color.Parse("#E06C75")), backgroundBrush: Background)
+            ["("] = new GenericTextRunProperties(typeface, fontFeatures: FontFeatures, fontRenderingEmSize: FontSize, foregroundBrush: new SolidColorBrush(Color.Parse("#61AFEF")), backgroundBrush: Background),
+            [")"] = new GenericTextRunProperties(typeface, fontFeatures: FontFeatures, fontRenderingEmSize: FontSize, foregroundBrush: new SolidColorBrush(Color.Parse("#61AFEF")), backgroundBrush: Background),
+            ["["] = new GenericTextRunProperties(typeface, fontFeatures: FontFeatures, fontRenderingEmSize: FontSize, foregroundBrush: new SolidColorBrush(Color.Parse("#C678DD")), backgroundBrush: Background),
+            ["]"] = new GenericTextRunProperties(typeface, fontFeatures: FontFeatures, fontRenderingEmSize: FontSize, foregroundBrush: new SolidColorBrush(Color.Parse("#C678DD")), backgroundBrush: Background),
+            ["class_character"] = new GenericTextRunProperties(typeface, fontFeatures: FontFeatures, fontRenderingEmSize: FontSize, foregroundBrush: new SolidColorBrush(Color.Parse("#98C379")), backgroundBrush: Background),
+            ["-"] = new GenericTextRunProperties(typeface, fontFeatures: FontFeatures, fontRenderingEmSize: FontSize, foregroundBrush: new SolidColorBrush(Color.Parse("#ABB2BF")), backgroundBrush: Background),
+            ["|"] = new GenericTextRunProperties(typeface, fontFeatures: FontFeatures, fontRenderingEmSize: FontSize, foregroundBrush: new SolidColorBrush(Color.Parse("#56B6C2")), backgroundBrush: Background),
+            ["identity_escape"] = new GenericTextRunProperties(typeface, fontFeatures: FontFeatures, fontRenderingEmSize: FontSize, foregroundBrush: new SolidColorBrush(Color.Parse("#56B6C2")), backgroundBrush: Background),
+            ["{"] = new GenericTextRunProperties(typeface, fontFeatures: FontFeatures, fontRenderingEmSize: FontSize, foregroundBrush: new SolidColorBrush(Color.Parse("#D19A66")), backgroundBrush: Background),
+            ["}"] = new GenericTextRunProperties(typeface, fontFeatures: FontFeatures, fontRenderingEmSize: FontSize, foregroundBrush: new SolidColorBrush(Color.Parse("#D19A66")), backgroundBrush: Background),
+            ["decimal_digits"] = new GenericTextRunProperties(typeface, fontFeatures: FontFeatures, fontRenderingEmSize: FontSize, foregroundBrush: new SolidColorBrush(Color.Parse("#D19A66")), backgroundBrush: Background),
+            ["end_assertion"] = new GenericTextRunProperties(typeface, fontFeatures: FontFeatures, fontRenderingEmSize: FontSize, foregroundBrush: new SolidColorBrush(Color.Parse("#E06C75")), backgroundBrush: Background)
         }.ToFrozenDictionary();
 
         List<ValueSpan<TextRunProperties>> textStyleOverrides = [];
@@ -150,7 +150,7 @@ public sealed partial class HighlightingTextPresenter : TextPresenter
         {
             highlightOverrides = [];
             //var highlightProperties = new GenericTextRunProperties(typeface, FontFeatures, FontSize, foregroundBrush: highlightBrush, backgroundBrush: Background);
-            var defaultProperties = new GenericTextRunProperties(typeface, FontFeatures, FontSize, foregroundBrush: Foreground, backgroundBrush: Background);
+            var defaultProperties = new GenericTextRunProperties(typeface, fontFeatures: FontFeatures, fontRenderingEmSize: FontSize, foregroundBrush: Foreground, backgroundBrush: Background);
 
             foreach (var range in lastJson)
             {
@@ -181,7 +181,7 @@ public sealed partial class HighlightingTextPresenter : TextPresenter
         if (!string.IsNullOrEmpty(preeditText))
         {
             var preeditHighlight = new ValueSpan<TextRunProperties>(caretIndex, preeditText.Length,
-                    new GenericTextRunProperties(typeface, FontFeatures, FontSize,
+                    new GenericTextRunProperties(typeface, fontFeatures: FontFeatures, fontRenderingEmSize: FontSize,
                     foregroundBrush: foreground,
                     textDecorations: TextDecorations.Underline));
 
@@ -194,7 +194,7 @@ public sealed partial class HighlightingTextPresenter : TextPresenter
                 textStyleOverrides =
                 [
                     new ValueSpan<TextRunProperties>(start, length,
-                new GenericTextRunProperties(typeface, FontFeatures, FontSize,
+                new GenericTextRunProperties(typeface, fontFeatures: FontFeatures, fontRenderingEmSize: FontSize,
                     foregroundBrush: SelectionForegroundBrush)),
             ];
             }
@@ -227,11 +227,11 @@ public sealed partial class HighlightingTextPresenter : TextPresenter
         IReadOnlyList<ValueSpan<TextRunProperties>>? textStyleOverrides)
     {
         var foreground = Foreground;
-        var maxWidth = MathUtilities.IsZero(constraint.Width) ? double.PositiveInfinity : constraint.Width;
-        var maxHeight = MathUtilities.IsZero(constraint.Height) ? double.PositiveInfinity : constraint.Height;
+        var maxWidth = Math.Abs(constraint.Width) < 2.2204460492503131E-15 ? double.PositiveInfinity : constraint.Width;
+        var maxHeight = Math.Abs(constraint.Height) < 2.2204460492503131E-15 ? double.PositiveInfinity : constraint.Height;
 
-        var textLayout = new TextLayout(text, typeface, FontFeatures, FontSize, foreground, TextAlignment,
-            TextWrapping, maxWidth: maxWidth, maxHeight: maxHeight, textStyleOverrides: textStyleOverrides,
+        var textLayout = new TextLayout(text, typeface, fontFeatures: FontFeatures, fontSize: FontSize, foreground: foreground, textAlignment: TextAlignment,
+            textWrapping: TextWrapping, maxWidth: maxWidth, maxHeight: maxHeight, textStyleOverrides: textStyleOverrides,
             flowDirection: FlowDirection, lineHeight: LineHeight, letterSpacing: LetterSpacing);
 
         return textLayout;

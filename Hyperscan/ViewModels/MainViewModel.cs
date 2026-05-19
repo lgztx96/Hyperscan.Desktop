@@ -12,7 +12,7 @@ public sealed partial class MainViewModel : ObservableObject
     public partial List<MatchContent>? Matches { get; set; }
 
     [ObservableProperty]
-    public partial FlatTreeDataGridSource<MatchContent>? Source { get; set; }
+    public partial List<MatchContent>? Source { get; set; }
 
     public List<HsFlag> Flags { get; }
 

@@ -15,24 +15,11 @@ class Program
         BuildAvaloniaApp()
            .StartWithClassicDesktopLifetime(args);
     }
+
     // Avalonia configuration, don't remove; also used by visual designer.
     public static AppBuilder BuildAvaloniaApp()
         => AppBuilder.Configure<App>()
-            //.UsePlatformDetect()
-            .UseWin32()
-            .UseSkia()
-            .With(new Win32PlatformOptions
-            {
-                RenderingMode = [
-                    Win32RenderingMode.AngleEgl, 
-                    //Win32RenderingMode.Vulkan, 
-                    Win32RenderingMode.Software
-                    ]
-            })
-            //.With(new X11PlatformOptions() 
-            //{ 
-            //    RenderingMode = [X11RenderingMode.Vulkan, X11RenderingMode.Glx, X11RenderingMode.Software] 
-            //})
-            .LogToTextWriter(File.CreateText("1.txt"), Avalonia.Logging.LogEventLevel.Verbose);
-
+        .UseHarfBuzz()
+        .UseWin32()
+        .UseSkia();
 }

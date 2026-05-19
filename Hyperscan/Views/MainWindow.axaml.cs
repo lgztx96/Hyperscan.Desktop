@@ -1,10 +1,8 @@
 ﻿using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Documents;
-using Avalonia.Controls.Models.TreeDataGrid;
 using Avalonia.Controls.Notifications;
 using Avalonia.Controls.Primitives;
-using Avalonia.LogicalTree;
 using Avalonia.Media;
 using Avalonia.Platform.Storage;
 using Hyperscan.Core;
@@ -56,20 +54,10 @@ public partial class MainWindow : Window
         MatchHexResult.Inlines = [];
         notificationManager = new WindowNotificationManager(TopLevel.GetTopLevel(this));
 
-        RenderOptions.SetTextRenderingMode(this, TextRenderingMode.SubpixelAntialias);
+        TextOptions.SetTextRenderingMode(this, TextRenderingMode.SubpixelAntialias);
         RenderOptions.SetEdgeMode(this, EdgeMode.Antialias);
 
-        viewModel.Source = new FlatTreeDataGridSource<MatchContent>([])
-        {
-            Columns =
-            {
-                new TextColumn<MatchContent, uint>("offset", x => x.Offset),
-                new TextColumn<MatchContent, string>("content (utf8)", x => x.Content, new GridLength(200), new TextColumnOptions<MatchContent>{ CanUserSortColumn = false }),
-                new TextColumn<MatchContent, string>("hex", x => x.Hex, new GridLength(100), new TextColumnOptions<MatchContent>{ CanUserSortColumn = false }),
-                new TextColumn<MatchContent, int>("byte length", x => x.ByteLength),
-                new TextColumn<MatchContent, string>("", x => null, GridLength.Star, new TextColumnOptions<MatchContent>{ CanUserResizeColumn = false, CanUserSortColumn = false, BeginEditGestures = BeginEditGestures.None }),
-            },
-        };
+        viewModel.Source = [];
     }
 
     void Initialize()
@@ -185,7 +173,7 @@ public partial class MainWindow : Window
             {
                 try
                 {
-                    ViewModel.Source.Items = null;
+                    ViewModel.Source = null;
                     var matches = new List<MatchContent>();
 
                     long length = new FileInfo(ViewModel.FilePath).Length;
@@ -218,7 +206,7 @@ public partial class MainWindow : Window
                     view.SafeMemoryMappedViewHandle.ReleasePointer();
                     ViewModel.Matches = matches;
 
-                    ViewModel.Source.Items = matches;
+                    ViewModel.Source = matches;
                     //= new FlatTreeDataGridSource<MatchContent>(matches)
                     //{
                     //    Columns =
@@ -384,7 +372,7 @@ public partial class MainWindow : Window
 
             db.CloseStream();
             ViewModel.Matches = matches;
-            ViewModel.Source.Items = matches;
+            ViewModel.Source = matches;
         }
         catch (ArgumentException ex)
         {

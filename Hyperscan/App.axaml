@@ -45,8 +45,9 @@
 		</ResourceDictionary>
 	</Application.Resources>
     <Application.Styles>
-        <actipro:ModernTheme>
-			<StyleInclude Source="/Styles/TreeDataGrid.axaml" />
+        <actipro:ModernTheme Includes="NativeDataGrid">
+			<StyleInclude Source="avares://ActiproSoftware.Avalonia.Themes.Native.DataGrid/Themes/Common.axaml"/>
+			<!--<StyleInclude Source="/Styles/TreeDataGrid.axaml" />-->
 			
         </actipro:ModernTheme>
     </Application.Styles>
