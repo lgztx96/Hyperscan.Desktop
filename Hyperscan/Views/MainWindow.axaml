@@ -1,4 +1,4 @@
-﻿<Window
+<Window
     x:Class="Hyperscan.Views.MainWindow"
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -8,6 +8,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:views="clr-namespace:Hyperscan.Views"
     xmlns:vm="using:Hyperscan.ViewModels"
+    xmlns:models="clr-namespace:Hyperscan.Models;assembly=Hyperscan"
     x:Name="rootWindow"
     Title=""
     Width="800"
@@ -34,15 +35,6 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Window.Resources>
-    <!--<Window.Styles>
-        <Style Selector="CheckBox.noContent /template/ ContentPresenter#ContentPresenter">
-            <Setter Property="IsVisible" Value="False" />
-        </Style>
-    </Window.Styles>
-    <Window.Resources>
-        <x:Double x:Key="TabItemMinHeight">30</x:Double>
-        <x:Double x:Key="TabItemHeaderFontSize">17</x:Double>
-    </Window.Resources>-->
     <DockPanel Margin="{Binding #rootWindow.OffScreenMargin}">
         <actipro:WindowTitleBar
             Background="Transparent"
@@ -123,7 +115,7 @@
                                     Grid.ColumnSpan="3"
                                     AcceptsReturn="True"
                                     TextWrapping="Wrap"
-                                    Watermark="insert text string here" />
+                                    PlaceholderText="insert text string here" />
                                 <GridSplitter Grid.Row="1" ResizeDirection="Rows" />
                                 <ScrollViewer
                                     Grid.Row="2"
@@ -143,7 +135,7 @@
                                     Grid.ColumnSpan="3"
                                     AcceptsReturn="True"
                                     TextWrapping="Wrap"
-                                    Watermark="insert hex string here. such as 41 33 20 43 41 50 or 413320434150" />
+                                    PlaceholderText="insert hex string here. such as 41 33 20 43 41 50 or 413320434150" />
                                 <GridSplitter Grid.Row="1" ResizeDirection="Rows" />
                                 <ScrollViewer
                                     Grid.Row="2"
@@ -167,7 +159,7 @@
                                     VerticalAlignment="Center"
                                     IsReadOnly="True"
                                     Text="{Binding FilePath, Mode=OneWay}"
-                                    Watermark="open any file as raw binary stream" />
+                                    PlaceholderText="open any file as raw binary stream" />
                                 <DataGrid
                                     Grid.Row="1"
                                     Grid.ColumnSpan="2"
@@ -211,7 +203,7 @@
                     Margin="10,10,10,5"
                     Classes="has-clear-button"
                     Theme="{DynamicResource ResourceKey=HighlightTextBox}"
-                    Watermark="insert your regular expression here" />
+                    PlaceholderText="insert your regular expression here" />
                 <StackPanel
                     Grid.Row="0"
                     Grid.ColumnSpan="3"
@@ -220,21 +212,40 @@
                     VerticalAlignment="Center"
                     Orientation="Horizontal"
                     Spacing="10">
+                    <ComboBox
+                        MinWidth="120"
+                        SelectedIndex="{Binding SelectedEngine, Mode=TwoWay}">
+                        <ComboBoxItem Content="Hyperscan" />
+                        <ComboBoxItem Content="Oniguruma" />
+                        <ComboBoxItem Content=".NET Regex" />
+                        <ComboBoxItem Content="PCRE2" />
+                    </ComboBox>
+                    <ComboBox
+                        MinWidth="120"
+                        ItemsSource="{Binding OnigSyntaxOptions, Mode=OneTime}"
+                        SelectedItem="{Binding SelectedOnigSyntax, Mode=TwoWay}"
+                        DisplayMemberBinding="{Binding DisplayName}"
+                        IsVisible="{Binding IsOniguruma}" />
+                    <ComboBox
+                        MinWidth="100"
+                        ItemsSource="{Binding OnigEncodingOptions, Mode=OneTime}"
+                        SelectedItem="{Binding SelectedOnigEncoding, Mode=TwoWay}"
+                        DisplayMemberBinding="{Binding DisplayName}"
+                        IsVisible="{Binding IsOniguruma}" />
                     <SplitButton Content="Flags">
                         <SplitButton.Flyout>
                             <Flyout Placement="Bottom">
-                                <ScrollViewer Width="250">
+                                <ScrollViewer Width="260">
                                     <ItemsControl
-                                        x:Name="Flags"
                                         Padding="10"
-                                        ItemsSource="{Binding Flags, Mode=OneTime}">
+                                        ItemsSource="{Binding CurrentFlags}">
                                         <ItemsControl.ItemTemplate>
                                             <DataTemplate>
                                                 <Grid Margin="0,0,0,5" ColumnDefinitions="*,auto">
                                                     <TextBlock FontSize="13" TextWrapping="Wrap">
-                                                        <Run FontWeight="Bold" Text="{Binding Title, Mode=OneTime}" />
+                                                        <Run FontWeight="Bold" Text="{Binding Title}" />
                                                         <LineBreak />
-                                                        <Run Text="{Binding Description, Mode=OneTime}" />
+                                                        <Run Text="{Binding Description}" />
                                                     </TextBlock>
                                                     <CheckBox
                                                         Grid.Column="1"

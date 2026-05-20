@@ -58,7 +58,7 @@ public sealed partial class HighlightingTextPresenter : TextPresenter
     private string? lastText;
 
     public static FrozenDictionary<string, GenericTextRunProperties> BuildStyleMap(
-        Typeface typeface, FontFeatureCollection fontFeatures, double fontSize, IBrush? background)
+        Typeface typeface, FontFeatureCollection? fontFeatures, double fontSize, IBrush? background)
     {
         return new Dictionary<string, GenericTextRunProperties>
         {
@@ -85,7 +85,7 @@ public sealed partial class HighlightingTextPresenter : TextPresenter
                 typeface,
                 fontFeatures: fontFeatures,
                 fontRenderingEmSize: fontSize,
-                foregroundBrush: new SolidColorBrush((Color)color),
+                foregroundBrush: color is Color c ? new SolidColorBrush(c) : null,
                 backgroundBrush: background);
         }
     }
@@ -142,7 +142,7 @@ public sealed partial class HighlightingTextPresenter : TextPresenter
         }.ToFrozenDictionary();
 
         List<ValueSpan<TextRunProperties>> textStyleOverrides = [];
-        IList<ValueSpan<TextRunProperties>> highlightOverrides = Array.Empty<ValueSpan<TextRunProperties>>();
+        IList<ValueSpan<TextRunProperties>> highlightOverrides = [];
 
         var foreground = Foreground;
 
@@ -180,7 +180,10 @@ public sealed partial class HighlightingTextPresenter : TextPresenter
             }
         }
 
-        textStyleOverrides.AddRange(highlightOverrides);
+        if (highlightOverrides.Count > 0)
+        {
+            textStyleOverrides.AddRange(highlightOverrides);
+        }
 
         if (PasswordChar != default(char) && !RevealPassword)
         {

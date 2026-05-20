@@ -9,8 +9,9 @@
 	<TrimMode>Link</TrimMode>
 	<Platforms>AnyCPU;x86;x64</Platforms>
 	<StaticExecutable>true</StaticExecutable>
+	<RuntimeIdentifier>win-$(Platform)</RuntimeIdentifier>
   </PropertyGroup>
-	
+
   <ItemGroup>
     <AvaloniaXaml Remove="runtimes\win-64\**" />
     <Compile Remove="runtimes\win-64\**" />
@@ -32,20 +33,45 @@
 
 	<ItemGroup>
 		<LinkerArg Include="/LTCG"></LinkerArg>
-		<LinkerArg Include="runtimes\$(RuntimeIdentifier)\native\lib.exp"></LinkerArg>
+		<!--<LinkerArg Include="runtimes\$(RuntimeIdentifier)\native\lib.exp"></LinkerArg>-->
+		<LinkerArg Include="/EXPORT:OnigEncodingUTF8" />
+		<LinkerArg Include="/EXPORT:OnigEncodingUTF16_LE" />
+		<LinkerArg Include="/EXPORT:OnigSyntaxOniguruma"/>
+		<LinkerArg Include="/EXPORT:OnigSyntaxRuby"/>
+		<LinkerArg Include="/EXPORT:OnigSyntaxPerl"/>
+		<LinkerArg Include="/EXPORT:OnigSyntaxPerl_NG"/>
+		<LinkerArg Include="/EXPORT:OnigSyntaxPython"/>
+		<LinkerArg Include="/EXPORT:OnigSyntaxJava"/>
+		<LinkerArg Include="/EXPORT:OnigSyntaxPosixExtended"/>
+		<LinkerArg Include="/EXPORT:OnigSyntaxPosixBasic"/>
+		<LinkerArg Include="/EXPORT:OnigSyntaxGrep"/>
+		<LinkerArg Include="/EXPORT:OnigSyntaxEmacs"/>
+		<LinkerArg Include="/EXPORT:OnigSyntaxASIS"/>
+		
 		<DirectPInvoke Include="libHarfBuzzSharp" />
 		<NativeLibrary Include="runtimes\$(RuntimeIdentifier)\native\libHarfBuzzSharp.lib" />
+		
 		<DirectPInvoke Include="libSkiaSharp" />
-		<NativeLibrary Include="runtimes\$(RuntimeIdentifier)\native\libSkiaSharp.lib" />
+		<NativeLibrary Include="runtimes\$(RuntimeIdentifier)\native\SkiaSharp.lib" />
+		<NativeLibrary Include="runtimes\$(RuntimeIdentifier)\native\skia.lib" />
+		
 		<DirectPInvoke Include="av_libglesv2" />
 		<NativeLibrary Include="runtimes\$(RuntimeIdentifier)\native\av_libglesv2.lib" />
+		
 		<DirectPInvoke Include="hs" />
 		<NativeLibrary Include="runtimes\$(RuntimeIdentifier)\native\hs.lib" />
+		
 		<DirectPInvoke Include="tree-sitter-regex" />
 		<NativeLibrary Include="runtimes\$(RuntimeIdentifier)\native\tree-sitter-regex.lib" />
-		<NativeLibrary Include="D:\vcpkg\installed\x64-windows-static\lib\tree-sitter.lib" />
+		<NativeLibrary Include="runtimes\$(RuntimeIdentifier)\native\tree-sitter.lib" />
+		
+		<DirectPInvoke Include="pcre2-8" />
+		<NativeLibrary Include="runtimes\$(RuntimeIdentifier)\native\pcre2-8.lib" />
+		
+		<DirectPInvoke Include="onig" />
+		<NativeLibrary Include="runtimes\$(RuntimeIdentifier)\native\onig.lib" />
 	</ItemGroup>
-	
+
 	<PropertyGroup>
 		<IlcInstructionSet>avx2</IlcInstructionSet>
 		<IlcOptimizationPreference>Speed</IlcOptimizationPreference>
@@ -74,14 +100,18 @@
 	  <AvaloniaUseCompiledBindingsByDefault>True</AvaloniaUseCompiledBindingsByDefault>
 	  <AvaloniaXamlVerboseExceptions>True</AvaloniaXamlVerboseExceptions>
 	</PropertyGroup>
-	
+
   <ItemGroup Condition=" '$(Platform)' != 'x86' ">
 	<Content Include="runtimes\win-x64\native\hs.dll" CopyToOutputDirectory="PreserveNewest" TargetPath="%(Filename)%(Extension)" />
 	<Content Include="runtimes\win-x64\native\tree-sitter-regex.dll" CopyToOutputDirectory="PreserveNewest" TargetPath="%(Filename)%(Extension)" />
+	<Content Include="runtimes\win-x64\native\onig.dll" CopyToOutputDirectory="PreserveNewest" TargetPath="%(Filename)%(Extension)" />
+	<Content Include="runtimes\win-x64\native\pcre2-8.dll" CopyToOutputDirectory="PreserveNewest" TargetPath="%(Filename)%(Extension)" />
   </ItemGroup>
-	
+
   <ItemGroup Condition=" '$(Platform)' == 'x86' ">
 	<Content Include="runtimes\win-x86\native\hs.dll" CopyToOutputDirectory="PreserveNewest" TargetPath="%(Filename)%(Extension)" />
 	<Content Include="runtimes\win-x86\native\tree-sitter-regex.dll" CopyToOutputDirectory="PreserveNewest" TargetPath="%(Filename)%(Extension)" />
+	<Content Include="runtimes\win-x86\native\onig.dll" CopyToOutputDirectory="PreserveNewest" TargetPath="%(Filename)%(Extension)" />
+	<Content Include="runtimes\win-x86\native\pcre2-8.dll" CopyToOutputDirectory="PreserveNewest" TargetPath="%(Filename)%(Extension)" />
   </ItemGroup>
 </Project>

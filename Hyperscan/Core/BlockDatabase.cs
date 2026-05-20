@@ -7,7 +7,7 @@ using static Hyperscan.Core.HyperscanApi;
 
 namespace Hyperscan.Core;
 
-public sealed unsafe class BlockDatabase : IDisposable
+public sealed unsafe class BlockDatabase : IRegexEngine
 {
     private readonly void* datebase;
 
@@ -86,7 +86,7 @@ public sealed unsafe class BlockDatabase : IDisposable
         return new BlockDatabase(database);
     }
 
-    public unsafe bool Scan(ReadOnlySpan<byte> utf8Bytes, Func<uint, ulong, ulong, uint, int> onMatchEvent)
+    public unsafe void Scan(ReadOnlySpan<byte> utf8Bytes, Func<uint, ulong, ulong, uint, int> onMatchEvent)
     {
         void* scratch = null;
 
@@ -99,7 +99,7 @@ public sealed unsafe class BlockDatabase : IDisposable
                 if (hs_scan(datebase, ptr, (uint)utf8Bytes.Length, 0, scratch, eventHander, &onMatchEvent)
                     != HS_SUCCESS)
                 {
-                    return false;
+                    return;
                 }
 #pragma warning restore CS8500
             }
@@ -108,8 +108,6 @@ public sealed unsafe class BlockDatabase : IDisposable
         {
             hs_free_scratch(scratch);
         }
-
-        return true;
     }
 
     public void Dispose()

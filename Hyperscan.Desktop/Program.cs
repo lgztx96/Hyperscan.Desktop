@@ -14,6 +14,13 @@ class Program
     {
         BuildAvaloniaApp()
            .StartWithClassicDesktopLifetime(args);
+
+        AppDomain.CurrentDomain.UnhandledException += (sender, e) =>
+        {
+            Exception ex = (Exception)e.ExceptionObject;
+            string logPath = Path.Combine(AppContext.BaseDirectory, "error.log");
+            File.WriteAllText(logPath, $"Unhandled exception: {ex}");
+        };
     }
 
     // Avalonia configuration, don't remove; also used by visual designer.
