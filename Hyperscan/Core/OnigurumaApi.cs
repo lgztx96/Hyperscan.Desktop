@@ -1,8 +1,9 @@
 
 global using onig_error_info_t = Hyperscan.Core.onig_error_info;
 global using onig_region_t = Hyperscan.Core.onig_region;
-using System;
+
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
@@ -50,21 +51,19 @@ public static unsafe partial class OnigurumaApi
     public static void* Utf8Encoding => utf8Encoding;
     public static void* Utf16LeEncoding => utf16LeEncoding;
 
+    public static bool IsNativeAot { get; }
+
+    static OnigurumaApi()
+    {
+        var stackTrace = new StackTrace(false);
+        IsNativeAot = stackTrace.GetFrame(0)?.GetMethod() is null;
+    }
 
     public static void EnsureInitialized()
     {
         if (initialized) return;
 
-        nint handle;
-        if (RuntimeFeature.IsDynamicCodeCompiled)
-        {
-            handle = NativeLibrary.Load("onig");
-        } 
-        else
-        {
-            handle = NativeLibrary.GetMainProgramHandle();
-        }
-
+        nint handle = IsNativeAot ? NativeLibrary.GetMainProgramHandle() : NativeLibrary.Load("onig");
         nint encPtr = NativeLibrary.GetExport(handle, "OnigEncodingUTF8");
         utf8Encoding = (void*)encPtr;
 
